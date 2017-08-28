@@ -25,3 +25,13 @@ Note: glusterfs group represents cns nodes.
 $ ansible-playbook -i <inventory> label.yml
 ```
 The playbook looks for kube config in Home directory and copies the config from one of the master node in case it doesn't find one.
+
+### Labeling of nodes
+The nodes are labeled as follows depending on the type of the role they play in OpenShift cluster:
+
+- masters - type=master
+- etcd - type=etcd
+- nodes - type=node
+- glusterfs - type=cns
+- lb - type=lb
+- infra - type=infra, type=node
