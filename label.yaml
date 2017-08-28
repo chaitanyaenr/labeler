@@ -19,7 +19,7 @@
        when: groups['masters']|default([])
 
      - name: label nodes
-       shell: oc label node {{ item }} type=node
+       shell: for node in $(cat {{ inventory_file }} | grep -v "'region'":" 'infra'" | cut -d ' ' -f1); do oc label node type=node; done
        with_items:  
         - "{{ groups['nodes'] }}"
        when: groups['masters']|default([])

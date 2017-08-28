@@ -34,4 +34,4 @@ The nodes are labeled as follows depending on the type of the role they play in 
 - nodes - type=node
 - glusterfs - type=cns
 - lb - type=lb
-- infra - type=infra, type=node
+- infra - type=infra
