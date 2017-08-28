@@ -1,0 +1,47 @@
+---
+- hosts: controller
+  user: root
+  vars:
+    - config: {{ ansible_env.HOME }}/.kube/config
+  tasks:
+     - name: create .kube directory to store config file
+       file: path={{ ansible_env.HOME }}/.kube state=directory
+
+     - name: get kube config from openshift master
+       shell: scp {{ item }}:{{ ansible_env.HOME }}/.kube/config {{ ansible_env.HOME }}/.kube/
+       with_items:
+        - "{{ groups['masters'][0] }}"
+
+     - name: label master nodes
+       shell: oc label node {{ item }} type=master
+       with_items:  
+        - "{{ groups['masters'] }}"
+       when: groups['masters']|default([])
+
+     - name: label nodes
+       shell: oc label node {{ item }} type=node
+       with_items:  
+        - "{{ groups['nodes'] }}"
+       when: groups['masters']|default([])
+
+     - name: label etcd nodes
+       shell: oc label node {{ item }} type=etcd
+       with_items: 
+        - "{{ groups['etcd'] }}"
+       when: groups['etcd']|default([])
+
+     - name: label lb nodes
+       shell: oc label node {{ item }} type=lb
+       with_items: 
+         - "{{ groups['glusterfs'] }}"
+       when: groups['lb']|default([])
+
+     - name: label cns nodes
+       shell: oc label node {{ item }} type=cns
+       with_items: 
+        - "{{ groups['glusterfs'] }}"
+       when: groups['glusterfs']|default([])
+
+     - name: label infra nodes
+       shell: for infra in $(cat {{ inventory_file }} | grep -w "'region'":" 'infra'" | cut -d ' ' -f1); do oc label node type=infra; done
+       when: groups['nodes']|default([])

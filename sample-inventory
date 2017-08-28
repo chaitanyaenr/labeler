@@ -1,0 +1,12 @@
+[controller]
+
+[masters]
+
+[nodes]
+
+[etcd]
+
+[lb]
+
+[glusterfs]
+
