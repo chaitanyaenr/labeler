@@ -5,10 +5,12 @@
     - config: {{ ansible_env.HOME }}/.kube/config
   tasks:
      - name: create .kube directory to store config file
-       file: path={{ ansible_env.HOME }}/.kube state=directory
+       file: 
+         path: "{{ ansible_env.HOME }}"/.kube 
+         state: directory
 
      - name: get kube config from openshift master
-       shell: scp {{ item }}:{{ ansible_env.HOME }}/.kube/config {{ ansible_env.HOME }}/.kube/
+       shell: scp {{ item }}:{{ config }} {{ config }}
        with_items:
         - "{{ groups['masters'][0] }}"
 
