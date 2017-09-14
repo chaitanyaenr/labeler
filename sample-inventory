@@ -1,4 +1,4 @@
-[controller]
+[pbench-controller]
 
 [masters]
 
@@ -9,4 +9,7 @@
 [lb]
 
 [glusterfs]
+
+[controller:vars]
+label_pbench=False
 

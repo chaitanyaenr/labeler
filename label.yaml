@@ -1,5 +1,5 @@
 ---
-- hosts: controller
+- hosts: pbench-controller
   user: root
   vars:
     - config: {{ ansible_env.HOME }}/.kube/config
@@ -22,7 +22,7 @@
        shell: for node in $(cat {{ inventory_file }} | grep -v "'region'":" 'infra'" | cut -d ' ' -f1); do oc label node type=node; done
        with_items:  
         - "{{ groups['nodes'] }}"
-       when: groups['masters']|default([])
+       when: groups['nodes']|default([])
 
      - name: label etcd nodes
        shell: oc label node {{ item }} type=etcd
@@ -45,3 +45,7 @@
      - name: label infra nodes
        shell: for infra in $(cat {{ inventory_file }} | grep -w "'region'":" 'infra'" | cut -d ' ' -f1); do oc label node type=infra; done
        when: groups['nodes']|default([])
+
+     - name: label all the nodes with type=pbench
+       shell: oc label node --all type=pbench
+       when: label_pbench | default(False) | bool
